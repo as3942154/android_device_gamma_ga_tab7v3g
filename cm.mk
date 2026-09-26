@@ -1,4 +1,3 @@
-#
 # Release name
 PRODUCT_RELEASE_NAME := GA-TAB7V3G
 
