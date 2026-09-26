@@ -1,0 +1,13 @@
+#
+# System properties for GA-TAB7V3G
+#
+
+# MediaTek hardware identifier reported by stock boot image
+ro.hardware=mt8312c
+
+# Product identity
+ro.product.device=ga_tab7v3g
+ro.product.name=cm_ga_tab7v3g
+ro.product.model=GA-TAB7V3G
+ro.product.brand=Gamma
+ro.product.manufacturer=Gamma
