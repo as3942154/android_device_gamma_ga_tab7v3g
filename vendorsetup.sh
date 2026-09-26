@@ -1,0 +1,2 @@
+add_lunch_combo cm_ga_tab7v3g-userdebug
+add_lunch_combo cm_ga_tab7v3g-eng
