@@ -1,0 +1,54 @@
+#
+# Copyright (C) 2026 The CyanogenMod Project
+#
+# Licensed under the Apache License, Version 2.0
+#
+
+LOCAL_PATH := device/gamma/ga_tab7v3g
+
+# Platform
+TARGET_BOARD_PLATFORM := mt6572
+
+# CPU
+TARGET_ARCH := arm
+TARGET_ARCH_VARIANT := armv7-a-neon
+TARGET_ARCH_VARIANT_CPU := cortex-a7
+TARGET_CPU_VARIANT := cortex-a7
+TARGET_CPU_ABI := armeabi-v7a
+TARGET_CPU_ABI2 := armeabi
+
+ARCH_ARM_HAVE_VFP := true
+ARCH_ARM_HAVE_NEON := true
+TARGET_CPU_SMP := true
+
+# Bootloader
+TARGET_NO_BOOTLOADER := true
+TARGET_BOOTLOADER_BOARD_NAME := mt6572
+
+# MediaTek
+BOARD_HAS_MTK_HARDWARE := true
+MTK_HARDWARE := true
+BOARD_USES_LEGACY_MTK_AV_BLOB := true
+
+COMMON_GLOBAL_CFLAGS += -DMTK_HARDWARE
+COMMON_GLOBAL_CPPFLAGS += -DMTK_HARDWARE
+
+# Filesystems
+TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
+
+# Boot image
+BOARD_KERNEL_PAGESIZE := 2048
+
+# Display
+TARGET_SCREEN_WIDTH := 600
+TARGET_SCREEN_HEIGHT := 1024
+
+# Graphics
+USE_OPENGL_RENDERER := true
+
+# Recovery
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/recovery.fstab
+
+# CM11 / old MTK SELinux policy
+POLICYVERS := 26
