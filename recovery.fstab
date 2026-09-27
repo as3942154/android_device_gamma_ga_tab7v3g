@@ -1,16 +1,14 @@
-# mount point   fstype      device          [device2]                           flags
+# mount point   fstype   device
 
-/boot         emmc      /dev/bootimg
-/recovery     emmc      /dev/recovery
-/uboot        emmc      /dev/uboot                              flags=display="U-Boot";backup=1
-/nvram        emmc      /dev/nvram                              flags=display="NVRAM";backup=1
+/boot           emmc     /dev/bootimg
+/recovery       emmc     /dev/recovery
+/uboot          emmc     /dev/uboot
+/nvram          emmc     /dev/nvram
 
-/system       ext4      /dev/block/mmcblk0p4
-/cache        ext4      /dev/block/mmcblk0p5
-/data         ext4      /dev/block/mmcblk0p6                    flags=encryptable=footer
+/system         ext4     /dev/block/mmcblk0p4
+/cache          ext4     /dev/block/mmcblk0p5
+/data           ext4     /dev/block/mmcblk0p6    flags=encryptable=footer
 
-# internal storage: use vold-managed device so emulated storage is exposed
-/internal_sd  vfat      /dev/block/vold/179:0                  flags=display="Internal SDcard";storage;wipeui;androidsecure
-
-/external_sd  auto      /dev/block/mmcblk1p1  /dev/block/mmcblk1  flags=display="Micro SD Card";storage;wipeui;removable
-/usbotg       auto      /dev/block/sda1       /dev/block/sda    flags=display="USB OTG";storage;wipeui;removable
+/internal_sd    vfat     /dev/block/vold/179:0    flags=display="Internal SDcard";storage;wipeui;androidsecure
+/external_sd    auto     /dev/block/mmcblk1p1     /dev/block/mmcblk1    flags=display="Micro SD Card";storage;wipeui;removable
+/usbotg         auto     /dev/block/sda1          /dev/block/sda        flags=display="USB OTG";storage;wipeui;removable
