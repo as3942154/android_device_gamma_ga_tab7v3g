@@ -29,3 +29,5 @@ PRODUCT_MANUFACTURER := Gamma
 # Display
 TARGET_SCREEN_WIDTH := 600
 TARGET_SCREEN_HEIGHT := 1024
+
+$(call inherit-product, device/gamma/ga_tab7v3g/device.mk)
