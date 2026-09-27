@@ -76,3 +76,57 @@ jobs:
 
           echo
           echo "=== Device Tree Validation Passed ==="
+
+      - name: Validate build configuration
+        run: |
+          set -e
+
+          echo "=== Build Configuration ==="
+
+          check_config() {
+            file="$1"
+            pattern="$2"
+            description="$3"
+
+            if grep -Eq "$pattern" "$file"; then
+              echo "OK: $description"
+            else
+              echo "ERROR: $description"
+              echo "Expected pattern: $pattern"
+              exit 1
+            fi
+          }
+
+          check_config BoardConfig.mk \
+            '^TARGET_BOARD_PLATFORM[[:space:]]*:?=[[:space:]]*mt6572' \
+            "MT6572 board platform"
+
+          check_config BoardConfig.mk \
+            '^TARGET_ARCH[[:space:]]*:?=[[:space:]]*arm' \
+            "ARM architecture"
+
+          check_config BoardConfig.mk \
+            '^TARGET_ARCH_VARIANT[[:space:]]*:?=[[:space:]]*armv7-a-neon' \
+            "ARMv7-A NEON"
+
+          check_config BoardConfig.mk \
+            '^TARGET_CPU_ABI[[:space:]]*:?=[[:space:]]*armeabi-v7a' \
+            "armeabi-v7a ABI"
+
+          check_config BoardConfig.mk \
+            '^TARGET_CPU_ABI2[[:space:]]*:?=[[:space:]]*armeabi' \
+            "armeabi secondary ABI"
+
+          check_config BoardConfig.mk \
+            '^TARGET_BOOTLOADER_BOARD_NAME[[:space:]]*:?=[[:space:]]*w706' \
+            "W706 bootloader board"
+
+          echo
+          echo "=== Product Definition ==="
+
+          grep -E \
+            'PRODUCT_(NAME|DEVICE|BRAND|MODEL|MANUFACTURER)[[:space:]]*[:]?=' \
+            device_ga_tab7v3g.mk || true
+
+          echo
+          echo "=== Build Configuration Validation Passed ==="
