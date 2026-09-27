@@ -7,7 +7,7 @@
 
 /system       ext4      /dev/block/mmcblk0p4
 /cache        ext4      /dev/block/mmcblk0p5
-/data         ext4      /dev/block/mmcblk0p6                    flags=encryptable=footer
+/data         ext4      /dev/block/mmcblk0p6                    
 
 # internal storage: use vold-managed device so emulated storage is exposed
 /internal_sd  vfat      /dev/block/vold/179:0                  flags=display="Internal SDcard";storage;wipeui;androidsecure
