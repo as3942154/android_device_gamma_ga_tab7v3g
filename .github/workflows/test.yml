@@ -11,7 +11,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Show files
+      - name: Validate device tree
         run: |
-          echo "Testing device tree..."
-          find . -maxdepth 2 -type f | sort
+          set -e
+
+          echo "=== Device Tree Validation ==="
+
+          required_files="
+          AndroidBoard.mk
+          AndroidProducts.mk
+          BoardConfig.mk
+          device.mk
+          device_ga_tab7v3g.mk
+          MTKbootimg.mk
+          recovery.fstab
+          system.prop
+          vendorsetup.sh
+          "
+
+          for file in $required_files; do
+            if [ ! -e "$file" ]; then
+              echo "ERROR: Missing $file"
+              exit 1
+            fi
+            echo "OK: $file"
+          done
+
+          echo
+          echo "=== Board Configuration ==="
+          grep -E 'TARGET_BOARD_PLATFORM|TARGET_CPU_ABI|TARGET_ARCH|TARGET_BOOTLOADER_BOARD_NAME' BoardConfig.mk || true
+
+          echo
+          echo "=== Device Tree Validation Passed ==="
