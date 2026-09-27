@@ -15,7 +15,7 @@ jobs:
         run: |
           set -e
 
-          echo "=== Device Tree Validation ==="
+          echo "=== Required Files ==="
 
           required_files="
           AndroidBoard.mk
@@ -39,7 +39,40 @@ jobs:
 
           echo
           echo "=== Board Configuration ==="
-          grep -E 'TARGET_BOARD_PLATFORM|TARGET_CPU_ABI|TARGET_ARCH|TARGET_BOOTLOADER_BOARD_NAME' BoardConfig.mk || true
+
+          grep -q 'TARGET_BOARD_PLATFORM.*mt6572' BoardConfig.mk
+          echo "OK: MT6572"
+
+          grep -q 'TARGET_CPU_ABI.*armeabi-v7a' BoardConfig.mk
+          echo "OK: armeabi-v7a"
+
+          grep -q 'TARGET_ARCH.*arm' BoardConfig.mk
+          echo "OK: ARM"
+
+          grep -q 'TARGET_BOOTLOADER_BOARD_NAME.*w706' BoardConfig.mk
+          echo "OK: W706"
+
+          echo
+          echo "=== Product Configuration ==="
+
+          grep -n 'ga_tab7v3g' AndroidProducts.mk device_ga_tab7v3g.mk vendorsetup.sh || true
+
+          if ! grep -q 'ga_tab7v3g' AndroidProducts.mk; then
+            echo "ERROR: ga_tab7v3g not found in AndroidProducts.mk"
+            exit 1
+          fi
+
+          if ! grep -q 'ga_tab7v3g' vendorsetup.sh; then
+            echo "ERROR: ga_tab7v3g lunch target not found in vendorsetup.sh"
+            exit 1
+          fi
+
+          echo
+          echo "=== Configuration Summary ==="
+
+          grep -E \
+            'TARGET_BOARD_PLATFORM|TARGET_CPU_ABI|TARGET_CPU_ABI2|TARGET_ARCH|TARGET_ARCH_VARIANT|TARGET_BOOTLOADER_BOARD_NAME' \
+            BoardConfig.mk
 
           echo
           echo "=== Device Tree Validation Passed ==="
