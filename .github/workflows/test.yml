@@ -130,3 +130,47 @@ jobs:
 
           echo
           echo "=== Build Configuration Validation Passed ==="
+          
+      - name: Inspect CM11 build compatibility
+        run: |
+          set -e
+
+          echo "=== Fetching CM build system ==="
+
+          git clone --depth=1 \
+            https://github.com/CyanogenmodMT6572/android_build.git \
+            cm_build
+
+          echo
+          echo "=== CM Build System ==="
+          ls -la cm_build
+          ls -la cm_build/core
+          ls -la cm_build/target
+
+          echo
+          echo "=== Device Tree Makefiles ==="
+
+          for file in \
+            AndroidBoard.mk \
+            BoardConfig.mk \
+            device.mk \
+            device_ga_tab7v3g.mk \
+            MTKbootimg.mk \
+            AndroidProducts.mk
+          do
+            echo
+            echo "----- $file -----"
+            sed -n '1,240p' "$file"
+          done
+
+          echo
+          echo "=== CM Build References ==="
+
+          grep -R \
+            -E 'TARGET_BOARD_PLATFORM|TARGET_BOOTLOADER_BOARD_NAME|PRODUCT_DEVICE|PRODUCT_NAME' \
+            cm_build/core \
+            cm_build/target \
+            2>/dev/null | head -100 || true
+
+          echo
+          echo "=== CM11 Build Compatibility Inspection Complete ==="
