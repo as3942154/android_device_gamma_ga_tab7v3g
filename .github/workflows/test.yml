@@ -199,10 +199,24 @@ jobs:
 
           echo "=== Loading CM build environment ==="
           export ANDROID_BUILD_TOP="$CM_BUILD"
-          source build/envsetup.sh
+
+          if [ -f build/envsetup.sh ]; then
+            source build/envsetup.sh
+          else
+            echo "ERROR: build/envsetup.sh not found in CM build"
+            exit 1
+          fi
 
           echo "=== Available GA-TAB7V3G lunch targets ==="
-          lunch 2>&1 | grep -E 'ga_tab7v3g|Choice' || true
+          if command -v lunch &> /dev/null; then
+            lunch 2>&1 | grep -E 'ga_tab7v3g|Choice' || echo "No ga_tab7v3g target found"
+          else
+            echo "lunch command not available"
+            exit 1
+          fi
 
           echo "=== Attempting lunch ==="
-          lunch cm_ga_tab7v3g-userdebug
+          lunch cm_ga_tab7v3g-userdebug || {
+            echo "ERROR: lunch failed"
+            exit 1
+          }
