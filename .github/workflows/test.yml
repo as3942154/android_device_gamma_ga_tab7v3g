@@ -175,7 +175,7 @@ jobs:
           echo
           echo "=== CM11 Build Compatibility Inspection Complete ==="
 
-      - name: Test CM product definition
+            - name: Test CM product definition
         run: |
           set -e
 
@@ -197,13 +197,22 @@ jobs:
           echo "=== Device tree installed ==="
           find device/gamma/ga_tab7v3g -maxdepth 2 -type f | sort
 
+          echo "=== Checking CM build structure ==="
+          ls -la build/ 2>/dev/null || echo "build/ directory not found"
+          ls -la . | head -20
+
           echo "=== Loading CM build environment ==="
           export ANDROID_BUILD_TOP="$CM_BUILD"
 
-          if [ -f build/envsetup.sh ]; then
+          # The android_build repo should have envsetup.sh at root
+          if [ -f ./envsetup.sh ]; then
+            source ./envsetup.sh
+          elif [ -f build/envsetup.sh ]; then
             source build/envsetup.sh
           else
-            echo "ERROR: build/envsetup.sh not found in CM build"
+            echo "ERROR: envsetup.sh not found"
+            echo "Contents of $CM_BUILD:"
+            find . -name "envsetup.sh" -o -name "*.sh" | head -20
             exit 1
           fi
 
@@ -216,6 +225,10 @@ jobs:
           fi
 
           echo "=== Attempting lunch ==="
+          lunch cm_ga_tab7v3g-userdebug || {
+            echo "ERROR: lunch failed"
+            exit 1
+          }
           lunch cm_ga_tab7v3g-userdebug || {
             echo "ERROR: lunch failed"
             exit 1
