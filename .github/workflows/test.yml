@@ -130,7 +130,7 @@ jobs:
 
           echo
           echo "=== Build Configuration Validation Passed ==="
-          
+
       - name: Inspect CM11 build compatibility
         run: |
           set -e
@@ -182,27 +182,19 @@ jobs:
           echo "=== Preparing CM build environment ==="
 
           mkdir -p cm_build/device/gamma
-          cp -a device/gamma/ga_tab7v3g cm_build/device/gamma/
+          cp -a . cm_build/device/gamma/ga_tab7v3g
 
           cd cm_build
 
-          echo
           echo "=== Device tree installed ==="
           ls -la device/gamma/ga_tab7v3g
 
-          echo
           echo "=== Loading CM build environment ==="
-
           export ANDROID_BUILD_TOP="$PWD"
-
           source build/envsetup.sh
 
-          echo
           echo "=== Available GA-TAB7V3G lunch targets ==="
-
           lunch 2>&1 | grep -E 'ga_tab7v3g|Choice' || true
 
-          echo
           echo "=== Attempting lunch ==="
-
           lunch cm_ga_tab7v3g-userdebug
