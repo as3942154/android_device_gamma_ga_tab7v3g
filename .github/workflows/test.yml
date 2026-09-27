@@ -183,11 +183,11 @@ jobs:
 
           echo
           echo "=== Checking AndroidProducts.mk ==="
-          if grep -q 'ifeq.*ga_tab7v3g' AndroidProducts.mk || grep -q 'PRODUCT_DEVICE.*ga_tab7v3g' AndroidProducts.mk; then
-            echo "OK: ga_tab7v3g product defined"
-            grep -E 'ga_tab7v3g|PRODUCT_NAME' AndroidProducts.mk
+          if grep -q 'device_ga_tab7v3g.mk' AndroidProducts.mk; then
+            echo "OK: ga_tab7v3g product makefile referenced"
+            cat AndroidProducts.mk
           else
-            echo "ERROR: ga_tab7v3g not properly defined in AndroidProducts.mk"
+            echo "ERROR: device_ga_tab7v3g.mk not referenced in AndroidProducts.mk"
             exit 1
           fi
 
