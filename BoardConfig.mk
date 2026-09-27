@@ -64,6 +64,3 @@ TARGET_SCREEN_HEIGHT := 1024
 
 # Graphics
 USE_OPENGL_RENDERER := true
-
-# CM11 / MT6572 legacy SELinux policy
-POLICYVERS := 26
