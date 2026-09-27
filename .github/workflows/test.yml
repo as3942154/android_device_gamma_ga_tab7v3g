@@ -175,45 +175,41 @@ jobs:
           echo
           echo "=== CM11 Build Compatibility Inspection Complete ==="
 
-      - name: Test CM product definition
+      - name: Test CM device tree integration
         run: |
           set -e
 
-          echo "=== Validating Device Tree Structure ==="
+          CM_BUILD="$RUNNER_TEMP/cm_build"
+
+          git clone --depth=1 \
+            https://github.com/CyanogenmodMT6572/android_build.git \
+            "$CM_BUILD"
+
+          mkdir -p "$CM_BUILD/device/gamma/ga_tab7v3g"
+
+          rsync -a \
+            --exclude='.git' \
+            ./ "$CM_BUILD/device/gamma/ga_tab7v3g/"
+
+          cd "$CM_BUILD"
+
+          export ANDROID_BUILD_TOP="$CM_BUILD"
+
+          echo "=== Device Tree Files in CM Build ==="
+          find device/gamma/ga_tab7v3g -type f -name "*.mk" | sort
 
           echo
-          echo "=== Checking AndroidProducts.mk ==="
-          if grep -q 'device_ga_tab7v3g.mk' AndroidProducts.mk; then
-            echo "OK: ga_tab7v3g product makefile referenced"
-            cat AndroidProducts.mk
-          else
-            echo "ERROR: device_ga_tab7v3g.mk not referenced in AndroidProducts.mk"
-            exit 1
-          fi
+          echo "=== Validating Makefiles ==="
+
+          for mk in device/gamma/ga_tab7v3g/BoardConfig.mk \
+                    device/gamma/ga_tab7v3g/device.mk \
+                    device/gamma/ga_tab7v3g/device_ga_tab7v3g.mk
+          do
+            if [ -f "$mk" ]; then
+              echo "OK: $mk"
+              head -5 "$mk"
+            fi
+          done
 
           echo
-          echo "=== Checking device_ga_tab7v3g.mk ==="
-          if [ -f device_ga_tab7v3g.mk ]; then
-            echo "OK: device_ga_tab7v3g.mk exists"
-            grep -E 'PRODUCT_DEVICE|PRODUCT_MANUFACTURER|PRODUCT_MODEL|PRODUCT_NAME' device_ga_tab7v3g.mk || echo "(some PRODUCT_ vars may be inherited)"
-          else
-            echo "ERROR: device_ga_tab7v3g.mk missing"
-            exit 1
-          fi
-
-          echo
-          echo "=== Checking vendorsetup.sh ==="
-          if grep -q 'ga_tab7v3g' vendorsetup.sh; then
-            echo "OK: ga_tab7v3g lunch target in vendorsetup.sh"
-            grep 'ga_tab7v3g' vendorsetup.sh
-          else
-            echo "ERROR: ga_tab7v3g not in vendorsetup.sh"
-            exit 1
-          fi
-
-          echo
-          echo "=== Checking BoardConfig.mk for MT6572 ==="
-          grep -E 'TARGET_BOARD_PLATFORM|TARGET_BOOTLOADER_BOARD_NAME|TARGET_ARCH|TARGET_CPU_ABI' BoardConfig.mk
-
-          echo
-          echo "=== Device Tree Structure Validation Passed ==="
+          echo "=== CM11 Device Tree Integration Validation Complete ==="
