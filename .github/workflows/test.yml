@@ -181,16 +181,24 @@ jobs:
 
           echo "=== Preparing CM build environment ==="
 
-          mkdir -p cm_build/device/gamma
-          cp -a . cm_build/device/gamma/ga_tab7v3g
+          CM_BUILD="$RUNNER_TEMP/cm_build"
 
-          cd cm_build
+          rm -rf "$CM_BUILD"
+          git clone --depth=1 https://github.com/CyanogenmodMT6572/android_build.git "$CM_BUILD"
+
+          mkdir -p "$CM_BUILD/device/gamma/ga_tab7v3g"
+
+          rsync -a \
+            --exclude='.git' \
+            ./ "$CM_BUILD/device/gamma/ga_tab7v3g/"
+
+          cd "$CM_BUILD"
 
           echo "=== Device tree installed ==="
-          ls -la device/gamma/ga_tab7v3g
+          find device/gamma/ga_tab7v3g -maxdepth 2 -type f | sort
 
           echo "=== Loading CM build environment ==="
-          export ANDROID_BUILD_TOP="$PWD"
+          export ANDROID_BUILD_TOP="$CM_BUILD"
           source build/envsetup.sh
 
           echo "=== Available GA-TAB7V3G lunch targets ==="
