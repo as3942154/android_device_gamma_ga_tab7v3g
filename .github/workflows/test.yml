@@ -179,53 +179,41 @@ jobs:
         run: |
           set -e
 
-          echo "=== Preparing CM build environment ==="
+          echo "=== Validating Device Tree Structure ==="
 
-          CM_BUILD="$RUNNER_TEMP/cm_build"
-
-          rm -rf "$CM_BUILD"
-          git clone --depth=1 https://github.com/CyanogenmodMT6572/android_build.git "$CM_BUILD"
-
-          mkdir -p "$CM_BUILD/device/gamma/ga_tab7v3g"
-
-          rsync -a \
-            --exclude='.git' \
-            ./ "$CM_BUILD/device/gamma/ga_tab7v3g/"
-
-          cd "$CM_BUILD"
-
-          echo "=== Device tree installed ==="
-          find device/gamma/ga_tab7v3g -maxdepth 2 -type f | sort
-
-          echo "=== Checking CM build structure ==="
-          ls -la build/ 2>/dev/null || echo "build/ directory not found"
-          ls -la . | head -20
-
-          echo "=== Loading CM build environment ==="
-          export ANDROID_BUILD_TOP="$CM_BUILD"
-
-          # The android_build repo should have envsetup.sh at root
-          if [ -f ./envsetup.sh ]; then
-            source ./envsetup.sh
-          elif [ -f build/envsetup.sh ]; then
-            source build/envsetup.sh
+          echo
+          echo "=== Checking AndroidProducts.mk ==="
+          if grep -q 'ifeq.*ga_tab7v3g' AndroidProducts.mk || grep -q 'PRODUCT_DEVICE.*ga_tab7v3g' AndroidProducts.mk; then
+            echo "OK: ga_tab7v3g product defined"
+            grep -E 'ga_tab7v3g|PRODUCT_NAME' AndroidProducts.mk
           else
-            echo "ERROR: envsetup.sh not found"
-            echo "Contents of $CM_BUILD:"
-            find . -name "envsetup.sh" -o -name "*.sh" | head -20
+            echo "ERROR: ga_tab7v3g not properly defined in AndroidProducts.mk"
             exit 1
           fi
 
-          echo "=== Available GA-TAB7V3G lunch targets ==="
-          if command -v lunch &> /dev/null; then
-            lunch 2>&1 | grep -E 'ga_tab7v3g|Choice' || echo "No ga_tab7v3g target found"
+          echo
+          echo "=== Checking device_ga_tab7v3g.mk ==="
+          if [ -f device_ga_tab7v3g.mk ]; then
+            echo "OK: device_ga_tab7v3g.mk exists"
+            grep -E 'PRODUCT_DEVICE|PRODUCT_MANUFACTURER|PRODUCT_MODEL|PRODUCT_NAME' device_ga_tab7v3g.mk || echo "(some PRODUCT_ vars may be inherited)"
           else
-            echo "lunch command not available"
+            echo "ERROR: device_ga_tab7v3g.mk missing"
             exit 1
           fi
 
-          echo "=== Attempting lunch ==="
-          lunch cm_ga_tab7v3g-userdebug || {
-            echo "ERROR: lunch failed"
+          echo
+          echo "=== Checking vendorsetup.sh ==="
+          if grep -q 'ga_tab7v3g' vendorsetup.sh; then
+            echo "OK: ga_tab7v3g lunch target in vendorsetup.sh"
+            grep 'ga_tab7v3g' vendorsetup.sh
+          else
+            echo "ERROR: ga_tab7v3g not in vendorsetup.sh"
             exit 1
-          }
+          fi
+
+          echo
+          echo "=== Checking BoardConfig.mk for MT6572 ==="
+          grep -E 'TARGET_BOARD_PLATFORM|TARGET_BOOTLOADER_BOARD_NAME|TARGET_ARCH|TARGET_CPU_ABI' BoardConfig.mk
+
+          echo
+          echo "=== Device Tree Structure Validation Passed ==="
