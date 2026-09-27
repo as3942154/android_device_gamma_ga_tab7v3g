@@ -1,0 +1,31 @@
+```yaml
+name: CM11 Build Environment Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout device tree
+        uses: actions/checkout@v4
+
+      - name: Show runner information
+        run: |
+          echo "CPU:"
+          nproc
+          echo "Memory:"
+          free -h
+          echo "Disk:"
+          df -h
+
+      - name: Show device tree
+        run: |
+          echo "Repository:"
+          pwd
+          echo
+          echo "Files:"
+          find . -maxdepth 3 -type f | sort
+```
