@@ -175,7 +175,7 @@ jobs:
           echo
           echo "=== CM11 Build Compatibility Inspection Complete ==="
 
-            - name: Test CM product definition
+      - name: Test CM product definition
         run: |
           set -e
 
@@ -225,10 +225,6 @@ jobs:
           fi
 
           echo "=== Attempting lunch ==="
-          lunch cm_ga_tab7v3g-userdebug || {
-            echo "ERROR: lunch failed"
-            exit 1
-          }
           lunch cm_ga_tab7v3g-userdebug || {
             echo "ERROR: lunch failed"
             exit 1
