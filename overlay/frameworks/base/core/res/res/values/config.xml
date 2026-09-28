@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Initial Gamma GA-TAB7V3G framework overlay.
+     Values will be refined during CM11 hardware bring-up.
+-->
+<resources>
+
+    <!-- Do not expose Cell Broadcast links in the base Settings/MMS UI. -->
+    <bool name="config_cellBroadcastAppLinks">false</bool>
+
+    <!-- Wake the display when USB/power is connected. -->
+    <bool name="config_unplugTurnsOnScreen">true</bool>
+
+</resources>
