@@ -12,3 +12,7 @@ DEVICE_PACKAGE_OVERLAYS += \
 
 # Device-specific properties
 TARGET_SYSTEM_PROP := $(LOCAL_PATH)/system.prop
+
+# Device-specific configuration
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/init.ga_tab7v3g.rc:root/init.ga_tab7v3g.rc
